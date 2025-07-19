@@ -8,20 +8,42 @@ import Button from '../ui/Button';
 import { useVineConfig } from '../../hooks/useVineConfig';
 
 const VineConfigForm = () => {
-  const { vineConfig, updateVineConfig, isUpdating } = useVineConfig();
+  const { vineConfig, updateVineConfig, isUpdating, isLoading } = useVineConfig();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm({
     resolver: yupResolver(vineConfigSchema),
+    defaultValues: {
+      newVineDataFilePath: '',
+      vineFileName: 'vine_data.txt',
+      mugshotDirectory: '',
+      courtSectionHeader: '[COURT_DATA]',
+      jailSectionHeader: '[JAIL_DATA]',
+      arrestSectionHeader: '[ARREST_DATA]',
+      chargeSectionHeader: '[CHARGE_DATA]',
+      offenderSectionHeader: '[OFFENDER_DATA]',
+    }
   });
 
   useEffect(() => {
     if (vineConfig) {
-      reset(vineConfig);
+      // Reset form with fetched data, preserving defaults for empty fields
+      const formData = {
+        newVineDataFilePath: vineConfig.newVineDataFilePath || '',
+        vineFileName: vineConfig.vineFileName || 'vine_data.txt',
+        mugshotDirectory: vineConfig.mugshotDirectory || '',
+        courtSectionHeader: vineConfig.courtSectionHeader || '[COURT_DATA]',
+        jailSectionHeader: vineConfig.jailSectionHeader || '[JAIL_DATA]',
+        arrestSectionHeader: vineConfig.arrestSectionHeader || '[ARREST_DATA]',
+        chargeSectionHeader: vineConfig.chargeSectionHeader || '[CHARGE_DATA]',
+        offenderSectionHeader: vineConfig.offenderSectionHeader || '[OFFENDER_DATA]',
+      };
+      reset(formData);
     }
   }, [vineConfig, reset]);
 
@@ -29,29 +51,38 @@ const VineConfigForm = () => {
     updateVineConfig(data);
   };
 
+  if (isLoading) {
+    return (
+        <div className="flex justify-center items-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <span className="ml-2 text-gray-600">Loading configuration...</span>
+        </div>
+    );
+  }
+
   return (
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <FormSection title="File Paths" description="Configure VINE file locations and directories">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <FormInput
                 label="New Vine Data File Path"
+                placeholder="e.g., /path/to/vine/data"
                 {...register('newVineDataFilePath')}
                 error={errors.newVineDataFilePath?.message}
-                placeholder="/path/to/vine/data"
                 required
             />
             <FormInput
                 label="Vine File Name"
+                placeholder="e.g., vine_data.txt"
                 {...register('vineFileName')}
                 error={errors.vineFileName?.message}
-                placeholder="vine_data.txt"
                 required
             />
             <FormInput
                 label="Mugshot Directory"
+                placeholder="e.g., /path/to/mugshots"
                 {...register('mugshotDirectory')}
                 error={errors.mugshotDirectory?.message}
-                placeholder="/path/to/mugshots"
                 required
             />
           </div>
@@ -61,37 +92,37 @@ const VineConfigForm = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <FormInput
                 label="Court Section Header"
+                placeholder="e.g., [COURT_DATA]"
                 {...register('courtSectionHeader')}
                 error={errors.courtSectionHeader?.message}
-                placeholder="[COURT_DATA]"
                 required
             />
             <FormInput
                 label="Jail Section Header"
+                placeholder="e.g., [JAIL_DATA]"
                 {...register('jailSectionHeader')}
                 error={errors.jailSectionHeader?.message}
-                placeholder="[JAIL_DATA]"
                 required
             />
             <FormInput
                 label="Arrest Section Header"
+                placeholder="e.g., [ARREST_DATA]"
                 {...register('arrestSectionHeader')}
                 error={errors.arrestSectionHeader?.message}
-                placeholder="[ARREST_DATA]"
                 required
             />
             <FormInput
                 label="Charge Section Header"
+                placeholder="e.g., [CHARGE_DATA]"
                 {...register('chargeSectionHeader')}
                 error={errors.chargeSectionHeader?.message}
-                placeholder="[CHARGE_DATA]"
                 required
             />
             <FormInput
                 label="Offender Section Header"
+                placeholder="e.g., [OFFENDER_DATA]"
                 {...register('offenderSectionHeader')}
                 error={errors.offenderSectionHeader?.message}
-                placeholder="[OFFENDER_DATA]"
                 required
             />
           </div>
