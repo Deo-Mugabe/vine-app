@@ -32,7 +32,7 @@ const FtpConfigForm = () => {
 
   useEffect(() => {
     if (ftpConfig) {
-      // Reset form with fetched data, preserving defaults for empty fields
+      // Reset form with fetched data, using current values instead of placeholders
       const formData = {
         ftpHost: ftpConfig.ftpHost || '',
         ftpPort: ftpConfig.ftpPort || (ftpConfig.useSftp ? 22 : 21),
@@ -57,27 +57,25 @@ const FtpConfigForm = () => {
 
   if (isLoading) {
     return (
-        <div className="flex justify-center items-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-          <span className="ml-2 text-gray-600">Loading FTP configuration...</span>
+        <div className="flex justify-center items-center py-6">
+          <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+          <span className="ml-2 text-sm text-gray-600">Loading FTP configuration...</span>
         </div>
     );
   }
 
   return (
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <FormSection title="FTP/SFTP Settings" description="Configure remote file transfer connection">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <FormInput
                 label="FTP Host"
-                placeholder="e.g., ftp.example.com"
                 {...register('ftpHost')}
                 error={errors.ftpHost?.message}
                 required
             />
             <FormInput
                 label="FTP Port"
-                placeholder={useSftp ? "22 (SFTP default)" : "21 (FTP default)"}
                 type="number"
                 {...register('ftpPort', { valueAsNumber: true })}
                 error={errors.ftpPort?.message}
@@ -85,14 +83,12 @@ const FtpConfigForm = () => {
             />
             <FormInput
                 label="FTP Username"
-                placeholder="e.g., username"
                 {...register('ftpUsername')}
                 error={errors.ftpUsername?.message}
                 required
             />
             <FormInput
                 label="FTP Password"
-                placeholder="Enter secure password"
                 type="password"
                 {...register('ftpPassword')}
                 error={errors.ftpPassword?.message}
@@ -100,27 +96,26 @@ const FtpConfigForm = () => {
             />
             <FormInput
                 label="Remote Path"
-                placeholder="e.g., /remote/path/to/files"
                 {...register('ftpRemotePath')}
                 error={errors.ftpRemotePath?.message}
                 required
             />
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 mt-2">
               <input
                   type="checkbox"
                   id="useSftp"
                   {...register('useSftp')}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label htmlFor="useSftp" className="text-sm font-medium text-gray-700">
+              <label htmlFor="useSftp" className="text-xs font-medium text-gray-700">
                 Use SFTP (Secure FTP)
               </label>
             </div>
           </div>
 
           {useSftp && (
-              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-700">
+              <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded">
+                <p className="text-xs text-blue-700">
                   <strong>SFTP Mode:</strong> Using secure file transfer protocol. Default port is 22 for SFTP connections.
                   {watch('ftpPort') === 21 && (
                       <span className="block mt-1 text-blue-600">
@@ -132,7 +127,7 @@ const FtpConfigForm = () => {
           )}
         </FormSection>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end pt-2">
           <Button type="submit" loading={isUpdating} className="bg-blue-600 hover:bg-blue-700">
             Save FTP Configuration
           </Button>

@@ -32,7 +32,7 @@ const VineConfigForm = () => {
 
   useEffect(() => {
     if (vineConfig) {
-      // Reset form with fetched data, preserving defaults for empty fields
+      // Reset form with fetched data, using current values instead of placeholders
       const formData = {
         newVineDataFilePath: vineConfig.newVineDataFilePath || '',
         vineFileName: vineConfig.vineFileName || 'vine_data.txt',
@@ -53,34 +53,31 @@ const VineConfigForm = () => {
 
   if (isLoading) {
     return (
-        <div className="flex justify-center items-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-          <span className="ml-2 text-gray-600">Loading configuration...</span>
+        <div className="flex justify-center items-center py-6">
+          <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+          <span className="ml-2 text-sm text-gray-600">Loading configuration...</span>
         </div>
     );
   }
 
   return (
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <FormSection title="File Paths" description="Configure VINE file locations and directories">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <FormInput
                 label="New Vine Data File Path"
-                placeholder="e.g., /path/to/vine/data"
                 {...register('newVineDataFilePath')}
                 error={errors.newVineDataFilePath?.message}
                 required
             />
             <FormInput
                 label="Vine File Name"
-                placeholder="e.g., vine_data.txt"
                 {...register('vineFileName')}
                 error={errors.vineFileName?.message}
                 required
             />
             <FormInput
                 label="Mugshot Directory"
-                placeholder="e.g., /path/to/mugshots"
                 {...register('mugshotDirectory')}
                 error={errors.mugshotDirectory?.message}
                 required
@@ -89,38 +86,33 @@ const VineConfigForm = () => {
         </FormSection>
 
         <FormSection title="Section Headers" description="Configure data section headers for different record types">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <FormInput
                 label="Court Section Header"
-                placeholder="e.g., [COURT_DATA]"
                 {...register('courtSectionHeader')}
                 error={errors.courtSectionHeader?.message}
                 required
             />
             <FormInput
                 label="Jail Section Header"
-                placeholder="e.g., [JAIL_DATA]"
                 {...register('jailSectionHeader')}
                 error={errors.jailSectionHeader?.message}
                 required
             />
             <FormInput
                 label="Arrest Section Header"
-                placeholder="e.g., [ARREST_DATA]"
                 {...register('arrestSectionHeader')}
                 error={errors.arrestSectionHeader?.message}
                 required
             />
             <FormInput
                 label="Charge Section Header"
-                placeholder="e.g., [CHARGE_DATA]"
                 {...register('chargeSectionHeader')}
                 error={errors.chargeSectionHeader?.message}
                 required
             />
             <FormInput
                 label="Offender Section Header"
-                placeholder="e.g., [OFFENDER_DATA]"
                 {...register('offenderSectionHeader')}
                 error={errors.offenderSectionHeader?.message}
                 required
@@ -128,7 +120,7 @@ const VineConfigForm = () => {
           </div>
         </FormSection>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end pt-2">
           <Button type="submit" loading={isUpdating} className="bg-blue-600 hover:bg-blue-700">
             Save VINE Configuration
           </Button>
