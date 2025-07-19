@@ -30,7 +30,7 @@ function App() {
               </Routes>
             </Layout>
           </Router>
-        </ErrorBoundary>ls
+        </ErrorBoundary>
       </NotificationProvider>
     </QueryClientProvider>
   );
