@@ -1,38 +1,34 @@
 import * as yup from 'yup';
 
-// Schema for VINE Configuration Form - matching the form field names
+// Schema for VINE Configuration Form - matching the actual form field names used in the component
 export const vineConfigSchema = yup.object().shape({
-  newVineDataFilePath: yup
+  vineChargesFileHeader: yup
       .string()
-      .required('New vine data file path is required'),
+      .required('Charges file header is required'),
 
-  vineFileName: yup
+  vinePrisonerFileHeader: yup
       .string()
-      .required('Vine file name is required'),
+      .required('Prisoner file header is required'),
 
-  mugshotDirectory: yup
+  vineJailIdNumber: yup
+      .string()
+      .required('Jail ID number is required'),
+
+  vineNewMugShotDirectory: yup
+      .string()
+      .required('New mugshot directory is required'),
+
+  vineMugShotDirectory: yup
       .string()
       .required('Mugshot directory is required'),
 
-  courtSectionHeader: yup
+  vineNewVineFilePath: yup
       .string()
-      .required('Court section header is required'),
+      .required('New VINE file path is required'),
 
-  jailSectionHeader: yup
+  vineInterFile: yup
       .string()
-      .required('Jail section header is required'),
-
-  arrestSectionHeader: yup
-      .string()
-      .required('Arrest section header is required'),
-
-  chargeSectionHeader: yup
-      .string()
-      .required('Charge section header is required'),
-
-  offenderSectionHeader: yup
-      .string()
-      .required('Offender section header is required'),
+      .required('VINE interfile name is required'),
 });
 
 // Schema for FTP Configuration Form - matching the form field names
