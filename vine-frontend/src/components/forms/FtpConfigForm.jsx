@@ -23,7 +23,7 @@ const FtpConfigForm = () => {
       ftpPort: 21,
       ftpUsername: '',
       ftpPassword: '',
-      ftpRemotePath: '/',
+      ftpRemotePath: '',
       useSftp: false,
     }
   });
@@ -32,27 +32,39 @@ const FtpConfigForm = () => {
 
   useEffect(() => {
     if (ftpConfig) {
-      // Reset form with fetched data, using current values instead of placeholders
+      console.log('Backend FTP Config:', ftpConfig); // Debug log
+
+      // Map backend field names to frontend field names
       const formData = {
-        ftpHost: ftpConfig.ftpHost || '',
-        ftpPort: ftpConfig.ftpPort || (ftpConfig.useSftp ? 22 : 21),
-        ftpUsername: ftpConfig.ftpUsername || '',
-        ftpPassword: ftpConfig.ftpPassword || '',
-        ftpRemotePath: ftpConfig.ftpRemotePath || '/',
-        useSftp: ftpConfig.useSftp || false,
+        ftpHost: ftpConfig.vinePrimaryFtpServerName || '',
+        ftpPort: parseInt(ftpConfig.vineFtpFirewallOutPort || (ftpConfig.vineUseSftp ? 22 : 21)),
+        ftpUsername: ftpConfig.vineFtpUserName || '',
+        ftpPassword: ftpConfig.vineFtpPassword || '',
+        ftpRemotePath: ftpConfig.vineFtpDatFolderName || '/',
+        useSftp: ftpConfig.vineUseSftp || false,
       };
+
+      console.log('Mapped Form Data:', formData); // Debug log
       reset(formData);
     }
   }, [ftpConfig, reset]);
 
   const onSubmit = (data) => {
-    // Auto-adjust port if SFTP is enabled and port is still default FTP port
-    if (data.useSftp && data.ftpPort === 21) {
-      data.ftpPort = 22;
-    } else if (!data.useSftp && data.ftpPort === 22) {
-      data.ftpPort = 21;
-    }
-    updateFtpConfig(data);
+    console.log('Form submission data:', data); // Debug log
+
+    // Map frontend field names back to backend field names
+    const backendData = {
+      vineFtpUserName: data.ftpUsername,
+      vineFtpPassword: data.ftpPassword,
+      vinePrimaryFtpServerName: data.ftpHost,
+      vineFtpDatFolderName: data.ftpRemotePath,
+      vineFtpFirewallOutPort: data.ftpPort.toString(),
+      vineFtpMugshotFolderName: ftpConfig?.vineFtpMugshotFolderName || 'mugshots',
+      vineUseSftp: data.useSftp,
+    };
+
+    console.log('Backend submission data:', backendData); // Debug log
+    updateFtpConfig(backendData);
   };
 
   if (isLoading) {
